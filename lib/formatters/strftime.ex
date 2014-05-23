@@ -1,4 +1,6 @@
 defmodule Timex.DateFormat.Strftime do
+  require Record
+
   @moduledoc """
   Date formatting language defined by the `strftime` function from the Standard
   C Library.
@@ -114,7 +116,7 @@ defmodule Timex.DateFormat.Strftime do
 
   ###
 
-  defrecordp :directive, dir: nil, flag: nil, width: -1
+  Record.defrecordp :directive, dir: nil, flag: nil, width: -1
 
   defp scan_directive(str, pos) do
     scan_directive_flag(str, pos, directive())

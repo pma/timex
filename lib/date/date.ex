@@ -1,4 +1,6 @@
 defmodule Timex.Date do
+  require Record
+
   @moduledoc """
   Module for working with dates.
 
@@ -43,11 +45,11 @@ defmodule Timex.Date do
 
   # Constants
   @million 1_000_000
-  @weekdays [ 
+  @weekdays [
     {"Monday", 1}, {"Tuesday", 2}, {"Wednesday", 3}, {"Thursday", 4},
     {"Friday", 5}, {"Saturday", 6}, {"Sunday", 7}
   ]
-  @months [ 
+  @months [
     {"January", 1},  {"February", 2},  {"March", 3},
     {"April", 4},    {"May", 5},       {"June", 6},
     {"July", 7},     {"August", 8},    {"September", 9},
@@ -256,7 +258,7 @@ defmodule Timex.Date do
       Date.from(13, :secs)          #=> %DateTime{...}
       Date.from(13, :days, :zero)   #=> %DateTime{...}
 
-      date = Date.from(Time.now, :timestamp) 
+      date = Date.from(Time.now, :timestamp)
       |> Date.set(:timezone, timezone(:local))      #=> yields the same value as Date.now would
 
   """
@@ -911,7 +913,7 @@ defmodule Timex.Date do
     validate({year + value, month, day}) |> construct({h, m, s}, tz)
   end
 
-  defrecordp :shift_rec, secs: 0, days: 0, years: 0
+  Record.defrecordp :shift_rec, secs: 0, days: 0, years: 0
 
   # This clause will match lists with at least 2 values
   def shift(date, spec) when is_list(spec) do

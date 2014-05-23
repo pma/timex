@@ -580,7 +580,7 @@ defmodule Timex.Timezone.Local do
           _ ->
             # Fallback and ask systemsetup
             tz = System.cmd("systemsetup -gettimezone")
-            |> iolist_to_binary
+            |> List.to_string
             |> String.strip(?\n)
             |> String.replace("Time Zone: ", "")
             if String.length(tz) > 0 do
@@ -630,7 +630,7 @@ defmodule Timex.Timezone.Local do
       # Windows 7/Vista
       # On some systems the string value might be padded with excessive \0 bytes, trim them
       List.keyfind(values, 'TimeZoneKeyName', 0)
-      |> iolist_to_binary
+      |> List.to_string
       |> String.strip ?\0
     else
       # Windows 2000 or XP
@@ -653,8 +653,8 @@ defmodule Timex.Timezone.Local do
       # in the dictionary of unique Windows timezone names
       cond do
         tzone == nil -> raise "Could not find Windows time zone configuration!"
-        tzone -> 
-          timezone = tzone |> iolist_to_binary
+        tzone ->
+          timezone = tzone |> List.to_string
           case List.keyfind(@lookup_olson, timezone, 0) do
             nil ->
               # Try appending "Standard Time"
@@ -724,7 +724,7 @@ defmodule Timex.Timezone.Local do
 
   # See http://linux.about.com/library/cmd/blcmdl5_tzfile.htm or
   # https://github.com/eggert/tz/blob/master/tzfile.h for details on the tzfile format
-  # NOTE: These are defined as structs, but I would've preferred to use `defrecordp` here to 
+  # NOTE: These are defined as structs, but I would've preferred to use `defrecordp` here to
   # keep them private. The problem is that it is not possible to do the kind of manipulation
   # of records I'm doing in `parse_long`, etc. This is because unlike structs, `defrecordp`'s
   # functionality is based around macros and compile time knowledge. To reflect my desire to keep
@@ -887,7 +887,7 @@ defmodule Timex.Timezone.Local do
               |> List.first
             case fallback do
               # Well, there are no standard-time zones then, just take the first zone available
-              nil  -> 
+              nil  ->
                 last_transition = record.transitions |> List.last
                 %Zone{name: name} = zones_available |> Enum.fetch!(last_transition.zone)
                 {:ok, name}
